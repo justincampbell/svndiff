@@ -57,6 +57,9 @@ example, add to your .vimrc:
   noremap <F4> :call Svndiff("next")<CR>
   noremap <F5> :call Svndiff("clear")<CR>
 
+If you would like to svndiff every time you write the file, add to your .vimrc:
+
+  autocmd BufWritePost * :call Svndiff("prev")
 
 Configuration
 -------------
