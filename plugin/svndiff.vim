@@ -226,8 +226,8 @@ function s:Svndiff_update(...)
 	" Could not detect RCS type, print message and exit
 	
 	if ! has_key(s:rcs_type, fname) 
-		echom "Svndiff: Warning, file " . fname . " is not managed by a supported versioning system!"
-		unlet s:is_active[fname]
+"		echom "Svndiff: Warning, file " . fname . " is not managed by a supported versioning system!"
+"		unlet s:is_active[fname]
 		return
 	end
 
@@ -236,7 +236,7 @@ function s:Svndiff_update(...)
 	if ! has_key(s:newline, fname) 
 		let l:ff_to_newline = { "dos": "\r\n", "unix": "\n", "mac": "\r" }
 		let s:newline[fname] = l:ff_to_newline[&l:fileformat]
-		echom s:newline[fname]
+"		echom s:newline[fname]
 	end
 
 	" Check if the changedticks changed since the last invocation of this
