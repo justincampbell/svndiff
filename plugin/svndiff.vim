@@ -410,7 +410,7 @@ endfunction
 " Define sign characters and colors
 
 sign define svndiff_add    text=+ texthl=diffAdd
-sign define svndiff_delete text=- texthl=diffDelete
+sign define svndiff_delete text=_ texthl=diffDelete
 sign define svndiff_change text=± texthl=diffChange
 
 
