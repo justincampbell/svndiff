@@ -439,7 +439,8 @@ sign define svndiff_change text=± texthl=diffChange
 if exists("g:svndiff_autoupdate")
   autocmd CursorHold,CursorHoldI * call s:Svndiff_update()
   autocmd InsertLeave * call s:Svndiff_update()
-  autocmd BufWrite * call s:Svndiff_update()
+  autocmd BufWrite * call s:Svndiff_clear()
+  autocmd BufWritePost * call s:Svndiff_update()
 endif
 
 " vi: ts=2 sw=2
