@@ -159,6 +159,7 @@ let s:rcs_type = {}       " RCS type, will be autodetected to one of svn/git/hg/
 let s:rcs_cmd = {}        " Shell command to execute to get contents of clean file from RCS
 let s:diff_signs = {}     " dict with list of ids of all signs, per file
 let s:diff_blocks = {}    " dict with list of ids of first line of each diff block, per file
+let s:old_signs = {}      " dict with list of ids of old signs, per file
 let s:changedtick = {}    " dict with changedticks of each buffer since last invocation
 let s:newline = {}        " dict with newline character of each buffer
 
@@ -179,8 +180,12 @@ function s:Svndiff_update(...)
   let fname = bufname("%")
 
   if ! exists("s:is_active[fname]")
+    let s:is_active[fname] = 1
     return 0
   end
+
+  let s:diff_blocks[fname] = []
+  let s:diff_signs[fname] = []
 
   " Guess RCS type for this file
 
@@ -254,10 +259,6 @@ function s:Svndiff_update(...)
   let contents = join(getbufline("%", 1, "$"), s:newline[fname])
   let diff = system("diff -U0 <(" . s:rcs_cmd[fname] . fname . ") <(cat;echo)", contents)
 
-  " clear the old signs
-
-  call s:Svndiff_clear()
-
   " Parse the output of the diff command and put signs at changed, added and
   " removed lines
 
@@ -305,6 +306,25 @@ function s:Svndiff_update(...)
         let s:diff_signs[fname] += [id]
         let line = line + 1
       endwhile
+
+      " Remove signs that are no longer relevant
+
+      if exists("s:old_signs[fname]")
+        for id in s:old_signs[fname]
+          if index(s:diff_signs[fname], id) == -1
+            exec 'sign unplace ' . id . ' file=' . fname
+          end
+        endfor
+      end
+
+      " Store our current signs to be removed in the next update
+
+      let s:old_signs[fname] = []
+      for id in s:diff_signs[fname]
+        let s:old_signs[fname] += [id]
+      endfor
+
+      let s:is_active[fname] = 1
 
     endif
   endfor
